@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba440c88ea849f4ab4c497f84599abf, type: 3}
+  m_Name: Jump Boost
+  m_EditorClassIdentifier: 
+  nodeName: Jump Boost
+  description: You feel a surge of unexplained power through your legs
+  cost: 2
+  unlocked: 0
+  uiPosition: {x: 25, y: 25}
+  prerequisites:
+  - {fileID: 11400000, guid: 797e1cacb91a4dd4f9ba704c7712ee9c, type: 2}
+  effectType: 2
+  effectValue: 2

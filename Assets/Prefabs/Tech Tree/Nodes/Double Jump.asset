@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba440c88ea849f4ab4c497f84599abf, type: 3}
+  m_Name: Double Jump
+  m_EditorClassIdentifier: 
+  nodeName: Double Jump
+  description: You manifest the ability to use your legs mid-air
+  cost: 3
+  unlocked: 0
+  uiPosition: {x: 35, y: -25}
+  prerequisites:
+  - {fileID: 11400000, guid: f1a26c2f40a33ee47aec28be3a611b55, type: 2}
+  - {fileID: 11400000, guid: 29d850be22016d14085b26ddda293bb7, type: 2}
+  effectType: 6
+  effectValue: 1

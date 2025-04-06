@@ -16,7 +16,7 @@ public class SkillPointManager : MonoBehaviour
 
     public void AddSkillPoint()
     {
-        skillPoints++;
+        skillPoints += 2;
         Debug.Log("Skill Point Earned! Total: " + skillPoints);
     }
 

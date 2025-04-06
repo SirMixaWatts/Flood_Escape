@@ -7,7 +7,7 @@ public class LevelButton : MonoBehaviour
 {
     public TextMeshProUGUI levelIndexText;
     public Button startButton;
-    [HideInInspector] public int levelIndex;
+    public int levelIndex;
 
     public void Initialize()
     {

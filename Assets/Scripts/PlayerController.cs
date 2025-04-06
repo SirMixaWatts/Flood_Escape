@@ -1,6 +1,8 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -29,6 +31,9 @@ public class PlayerController : MonoBehaviour
     public float ladderJumpTransitionTime = 0.5f;
 
     private Rigidbody2D rb;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
     private float moveInput;
     private float verticalInput;
     private bool jumpPressed;
@@ -43,6 +48,8 @@ public class PlayerController : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -55,12 +62,33 @@ public class PlayerController : MonoBehaviour
 
         // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // Flip character
+        if (moveInput > 0.01f)
+            spriteRenderer.flipX = false;
+        else if (moveInput < -0.01f)
+            spriteRenderer.flipX = true;
+
+        // Set animator parameters
+        animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isClimbing", isClimbing);
+
+        // New: set ClimbSpeed parameter only when climbing
+        if (isClimbing)
+        {
+            animator.SetFloat("ClimbSpeed", Mathf.Abs(verticalInput));
+        }
+        else
+        {
+            animator.SetFloat("ClimbSpeed", 0f);
+        }
     }
 
     void FixedUpdate()
     {
         wasClimbingLastFrame = isClimbing;
-        CheckLadder(); // May update isClimbing
+        CheckLadder();
 
         float currentGravity = 3f;
 
@@ -82,14 +110,12 @@ public class PlayerController : MonoBehaviour
 
         if (isClimbing)
         {
-            // On ladder: reduce horizontal movement for tighter control.
             float x = moveInput * moveSpeed * ladderHorizontalSpeedMultiplier;
             float y = verticalInput * climbSpeed;
             rb.linearVelocity = new Vector2(x, y);
         }
         else
         {
-            // Ground or air movement
             float targetSpeed = moveInput * moveSpeed * (isSprinting ? sprintMultiplier : 1f);
             float speedDifference = targetSpeed - rb.linearVelocity.x;
             float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
@@ -97,7 +123,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector2.right * movement);
         }
 
-        // Jump logic (separated to avoid missing ladder jump transitions)
+        // Jump logic
         if (jumpPressed)
         {
             if (wasClimbingLastFrame)
@@ -107,17 +133,16 @@ public class PlayerController : MonoBehaviour
             else if (isGrounded)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                doubleJumpCount = 0; // Reset double jump count when grounded
+                doubleJumpCount = 0;
             }
             else if (hasDoubleJump && doubleJumpCount == 0 && doubleJumpCooldown <= 0f)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 doubleJumpCount = 1;
-                doubleJumpCooldown = 1f; // Or use a value set by the item
+                doubleJumpCooldown = 1f;
             }
         }
 
-        // Handle double jump cooldown
         if (doubleJumpCooldown > 0f)
         {
             doubleJumpCooldown -= Time.deltaTime;
@@ -156,7 +181,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Trigger an orb jump (from the Jump Orb system)
     public void TriggerOrbJump(float multiplier)
     {
         isClimbing = false;

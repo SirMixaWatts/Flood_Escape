@@ -26,11 +26,11 @@ public class Flood : MonoBehaviour
     public void TriggerGameOver()
     {
         gameOverTriggered = true;
-        riseSpeed = 0;
         if (gameOverMenu != null)
             gameOverMenu.SetActive(true);
         else
             Debug.LogWarning("Game Over Menu not assigned!");
+        Time.timeScale = 0f;
     }
 
     // Optional: Restart method for button hook-up
